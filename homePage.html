@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>
+            homePage
+        </title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="initial-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent"
+        />
+        <link href="files/resources/lib/theme/jqm/jqm.css" rel="stylesheet" />
+        <link href="files/resources/lib/theme/treatme-theme-a/treatme-theme-a.css" rel="stylesheet"
+        />
+        <link href="files/resources/lib/jquerymobile/1.3.0/jquery.mobile.structure-1.3.0.css"
+        rel="stylesheet" />
+        <script type="text/javascript" src="files/resources/lib/store/json2.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/jquery/jquery-1.8.2.js">
+        </script>
+        <script type="text/javascript">
+                    $(document).bind("mobileinit", function()
+            {
+                if (navigator.userAgent.toLowerCase().indexOf("android") != -1)
+                {
+                    $.mobile.defaultPageTransition = 'none';
+                    $.mobile.defaultDialogTransition = 'none';
+                }
+                if (navigator.userAgent.toLowerCase().indexOf("msie") != -1)
+                {
+                    $.mobile.allowCrossDomainPages = true;
+                    $.support.cors = true;
+                }
+            });
+        </script>
+        <script type="text/javascript" src="files/resources/lib/jquerymobile/1.3.0/jquery.mobile-1.3.0.js">
+        </script>
+        <script type="text/javascript" src="files/resources/js/mobilebase.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/event/customEventHandler.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/base/sha1.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/base/oauth.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/base/contexts.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/base/jsonpath.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/base/jquery.xml2json.min.js">
+        </script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/jquery-ui-map/jquery.ui.map.full.min.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/base/appery.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/get_target_platform.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/cordova.js">
+        </script>
+        <script type="text/javascript" src="files/resources/lib/childbrowser.js">
+        </script>
+        <link href="files/resources/css/mobilebase.css" rel="stylesheet" type="text/css"
+        />
+        <script type="text/javascript" src="files/views/assets/js/maps.js">
+        </script>
+        <script type="text/javascript" src="files/views/assets/js/services/service.js">
+        </script>
+        <link href="homePage.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="homePage.js">
+        </script>
+    </head>
+    
+    <body>
+        <script language="JavaScript" type="text/javascript">
+                if (navigator.userAgent.match(/iP/i))
+        {
+            $(window).bind('orientationchange', function(event)
+            {
+                $('meta[name="viewport"]').attr('content', 'initial-scale=1.0,maximum-scale=1.0, ' + ((window.orientation == 90 || window.orientation == -90 || window.orientation == 270) ? "height=device-width,width=device-height" : "height=device-height,width=device-width"));
+            }).trigger('orientationchange');
+        }
+        </script>
+        <div data-role="page" style="min-height:480px;" dsid="homePage" id="homePage" class="type-interior"
+        data-theme="a" data-add-back-btn="false" data-back-btn-text="Back">
+            <!-- p1header -->
+            <div data-role="header" data-position="fixed" data-theme="a" name="p1header" id="homePage_p1header"
+            class=' homePage_p1header '>
+                <h1 dsid="p1header">
+                    TreatME 1.0
+                </h1>
+                <!-- p1headerselectmenu -->
+                <div data-role="fieldcontain" class="homePage_p1headerselectmenu ui-icon-alt" style="display: inline-block;">
+                    <select name="p1headerselectmenu" id="homePage_p1headerselectmenu" dsid="p1headerselectmenu"
+                    data-theme="a" data-inline="true" data-mini="true" data-icon="arrow-d" data-iconpos="right"
+                    data-native-menu="false" tabIndex="23" appery-class="homePage_p1headerselectmenu">
+                        <option value="fr" reRender="p1headerselectmenu" dsid="p1headerselectmenu-0">
+                            FR
+                        </option>
+                        <option value="es" reRender="p1headerselectmenu" dsid="p1headerselectmenu-1">
+                            ES
+                        </option>
+                        <option value="gb" reRender="p1headerselectmenu" dsid="p1headerselectmenu-2" selected="selected">
+                            EN
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <!-- p1container -->
+            <div data-role="content" id="homePage_p1container" name="p1container" class=" homePage_p1container"
+            dsid="p1container" data-theme="">
+                <!-- mobileimage_113 -->
+                <img class=" homePage_mobileimage_113" src="files/views/assets/image/images-4-tizen.gif"
+                id="homePage_mobileimage_113" dsid="mobileimage_113" name="mobileimage_113" />
+                <!-- mobilegrid_60 -->
+                <div class="homePage_mobilegrid_60_wrapper">
+                    <table id="homePage_mobilegrid_60" class=" homePage_mobilegrid_60" dsid="mobilegrid_60"
+                    name="mobilegrid_60" cellpadding=0 cellspacing=0>
+                        <col style="width:192px;" />
+                        <col style="width:auto;" />
+                        <tr class="homePage_mobilegrid_60_row_0">
+                            <!-- mobilegridcell_61 -->
+                            <td id="homePage_mobilegridcell_61" name="mobilegridcell_61" class="homePage_mobilegridcell_61"
+                            colspan=1 rowspan=1>
+                                <div class="cell-wrapper">
+                                    <!-- p1image -->
+                                    <img class=" homePage_p1image" src="files/views/assets/image/a_382541132_ambulance_car.png"
+                                    id="homePage_p1image" dsid="p1image" name="p1image" />
+                                    <!-- p1label -->
+                                    <div name="p1label" id="homePage_p1label" dsid="p1label" data-role="appery_label"
+                                    class=' homePage_p1label '>
+                                        Emergency ?
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- mobilegridcell_62 -->
+                            <td id="homePage_mobilegridcell_62" name="mobilegridcell_62" class="homePage_mobilegridcell_62"
+                            colspan=1 rowspan=1>
+                                <div class="cell-wrapper">
+                                    <!-- p1toggle -->
+                                    <div data-role="fieldcontain" class="homePage_p1toggle ">
+                                        <select data-role="slider" name="p1toggle" id="homePage_p1toggle" dsid="p1toggle"
+                                        data-theme="a" data-track-theme="a">
+                                            <option value="off">
+                                                No
+                                            </option>
+                                            <option value="on">
+                                                Yes
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <!-- p1search -->
+                <div data-role="fieldcontain" class="homePage_p1search ">
+                    <div id="homePage_p1search-cover-div">
+                        <img id="homePage_p1search-cover-img" src="files/resources/image/icon-search-cover.png"
+                        />
+                    </div>
+                    <input type="search" name="p1search" id="homePage_p1search" dsid="p1search" value=""
+                    placeholder="keyword, eye... a doctor" data-theme="a" tabIndex="21" class='ui-icon-alt homePage_p1search '
+                    />
+                </div>
+                <!-- mobilegrid_95 -->
+                <div class="homePage_mobilegrid_95_wrapper">
+                    <table id="homePage_mobilegrid_95" class=" homePage_mobilegrid_95" dsid="mobilegrid_95"
+                    name="mobilegrid_95" cellpadding=0 cellspacing=0>
+                        <col style="width:auto;" />
+                        <col style="width:auto;" />
+                        <tr class="homePage_mobilegrid_95_row_0">
+                            <!-- mobilegridcell_96 -->
+                            <td id="homePage_mobilegridcell_96" name="mobilegridcell_96" class="homePage_mobilegridcell_96"
+                            colspan=1 rowspan=1>
+                                <div class="cell-wrapper">
+                                    <!-- mobilebutton_102 -->
+                                    <a data-role="button" name="mobilebutton_102" dsid="mobilebutton_102" class=' ui-icon-nodisc homePage_mobilebutton_102'
+                                    id="homePage_mobilebutton_102" data-corners="true" data-mini="true" data-theme="a"
+                                    tabIndex="29" data-icon="emergencyphone" data-iconpos="top">
+                                    Emergency Calls
+                                    </a>
+                                </div>
+                            </td>
+                            <!-- mobilegridcell_97 -->
+                            <td id="homePage_mobilegridcell_97" name="mobilegridcell_97" class="homePage_mobilegridcell_97"
+                            colspan=1 rowspan=1>
+                                <div class="cell-wrapper">
+                                    <!-- mobilebutton_103 -->
+                                    <a data-role="button" name="mobilebutton_103" dsid="mobilebutton_103" class=' ui-icon-alt homePage_mobilebutton_103'
+                                    id="homePage_mobilebutton_103" data-corners="true" data-icon="star" data-iconpos="top"
+                                    data-mini="true" data-theme="a" tabIndex="30" data-content-theme="e">
+                                    Favorites
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="homePage_mobilegrid_95_row_1">
+                            <!-- mobilegridcell_98 -->
+                            <td id="homePage_mobilegridcell_98" name="mobilegridcell_98" class="homePage_mobilegridcell_98"
+                            colspan=1 rowspan=1>
+                                <div class="cell-wrapper">
+                                    <!-- mobilebutton_104 -->
+                                    <a data-role="button" name="mobilebutton_104" dsid="mobilebutton_104" class=' ui-icon-nodisc homePage_mobilebutton_104'
+                                    id="homePage_mobilebutton_104" data-corners="true" data-mini="true" data-theme="a"
+                                    tabIndex="31" data-icon="text" data-iconpos="top">
+                                    Personnal Data
+                                    </a>
+                                </div>
+                            </td>
+                            <!-- mobilegridcell_99 -->
+                            <td id="homePage_mobilegridcell_99" name="mobilegridcell_99" class="homePage_mobilegridcell_99"
+                            colspan=1 rowspan=1>
+                                <div class="cell-wrapper">
+                                    <!-- mobilebutton_109 -->
+                                    <a data-role="button" name="mobilebutton_109" dsid="mobilebutton_109" class=' ui-icon-alt homePage_mobilebutton_109'
+                                    id="homePage_mobilebutton_109" data-corners="true" data-icon="search" data-iconpos="top"
+                                    data-mini="true" data-theme="a" tabIndex="35">
+                                    Advanced Search
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="homePage_mobilegrid_95_row_2">
+                            <!-- mobilegridcell_100 -->
+                            <td id="homePage_mobilegridcell_100" name="mobilegridcell_100" class="homePage_mobilegridcell_100"
+                            colspan=1 rowspan=1>
+                                <div class="cell-wrapper">
+                                    <!-- mobilebutton_110 -->
+                                    <a data-role="button" name="mobilebutton_110" dsid="mobilebutton_110" class=' ui-icon-nodisc homePage_mobilebutton_110'
+                                    id="homePage_mobilebutton_110" data-corners="true" data-mini="true" data-theme="a"
+                                    tabIndex="36" data-icon="conversation" data-iconpos="top">
+                                    Contacts
+                                    </a>
+                                </div>
+                            </td>
+                            <!-- mobilegridcell_101 -->
+                            <td id="homePage_mobilegridcell_101" name="mobilegridcell_101" class="homePage_mobilegridcell_101"
+                            colspan=1 rowspan=1>
+                                <div class="cell-wrapper">
+                                    <!-- mobilebutton_106 -->
+                                    <a data-role="button" name="mobilebutton_106" dsid="mobilebutton_106" class=' ui-icon-alt homePage_mobilebutton_106'
+                                    id="homePage_mobilebutton_106" data-corners="true" data-icon="gear" data-iconpos="top"
+                                    data-mini="true" data-theme="a" tabIndex="33">
+                                    Options
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!-- p1footer -->
+            <div data-role="footer" data-position="inline" class=" homePage_p1footer" name="p1footer"
+            dsid="p1footer" id="homePage_p1footer" data-theme="a">
+                <!-- mobilebutton_114 -->
+                <a data-role="button" name="mobilebutton_114" dsid="mobilebutton_114" class=' ui-icon-nodisc homePage_mobilebutton_114'
+                style='margin-left:5px; ' id="homePage_mobilebutton_114" data-corners="true" data-inline='true'
+                data-mini='true' data-theme="a" tabIndex="39" data-icon="facebook" data-iconpos="left">
+                Facebook
+                </a>
+                <!-- p1navbarbutton1 -->
+                <a data-role="button" name="p1navbarbutton1" dsid="p1navbarbutton1" class=' ui-icon-nodisc homePage_p1navbarbutton1'
+                style='margin-left:5px; ' id="homePage_p1navbarbutton1" data-corners="true" data-inline='true'
+                data-mini='true' data-theme="a" tabIndex="15" data-icon="tweet">
+                Twitter
+                </a>
+            </div>
+        </div>
+        <div data-role="page" style="min-height:480px;" dsid="profilePage" id="profilePage"
+        class="type-interior" data-theme="a" data-add-back-btn="true" data-back-btn-text="Back">
+            <!-- mobileheader -->
+            <div data-role="header" data-position="fixed" data-theme="a" name="mobileheader"
+            id="profilePage_mobileheader" class='ui-icon-alt profilePage_mobileheader '>
+                <h1 dsid="mobileheader">
+                    Personnal Data
+                </h1>
+                <!-- mobilebutton_26 -->
+                <a data-role="button" name="mobilebutton_26" dsid="mobilebutton_26" class='ui-btn-right  ui-icon-alt profilePage_mobilebutton_26'
+                style='min-height:20px; ' id="profilePage_mobilebutton_26" data-corners="true" data-icon="home"
+                data-iconpos="notext" data-inline='true' data-mini='true' data-theme="a" tabIndex="4">
+                Home
+                </a>
+            </div>
+            <!-- mobilecontainer -->
+            <div data-role="content" id="profilePage_mobilecontainer" name="mobilecontainer"
+            class=" profilePage_mobilecontainer" dsid="mobilecontainer" data-theme="">
+                <!-- mobileradiogroup_1 -->
+                <div data-role="fieldcontain" class=" profilePage_mobileradiogroup_1" id="profilePage_mobileradiogroup_1"
+                dsid="mobileradiogroup_1">
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        <!-- mobileradiobutton_2 -->
+                        <span dsid="mobileradiobutton_2" class="profilePage_mobileradiobutton_2" name="mobileradiobutton_2">
+                            <input type="radio" name="mobileradiogroup_1" id="profilePage_mobileradiobutton_2"
+                            style='display:none' checked="checked" tabIndex="1" data-theme="a" value="profile"
+                            />
+                            <label id="profilePage_mobileradiobutton_2_label" for="profilePage_mobileradiobutton_2">
+                                User Profile
+                            </label>
+                        </span>
+                        <!-- mobileradiobutton_3 -->
+                        <span dsid="mobileradiobutton_3" class="profilePage_mobileradiobutton_3" name="mobileradiobutton_3">
+                            <input type="radio" name="mobileradiogroup_1" id="profilePage_mobileradiobutton_3"
+                            style='display:none' data-theme="a" value="health" />
+                            <label id="profilePage_mobileradiobutton_3_label" for="profilePage_mobileradiobutton_3">
+                                Health Record
+                            </label>
+                        </span>
+                    </fieldset>
+                </div>
+                <!-- mobilelist_8 -->
+                <ul data-role="listview" id="profilePage_mobilelist_8" class=' profilePage_mobilelist_8 '
+                name="mobilelist_8" dsid="mobilelist_8" data-inset="true" data-theme="a" data-divider-theme="a"
+                data-count-theme="c" style="" data-split-theme="a">
+                    <!-- mobilelistitem_9 -->
+                    <li id="profilePage_mobilelistitem_9" data-role="list-divider" name="mobilelistitem_9"
+                    dsid="mobilelistitem_9" class=' profilePage_mobilelistitem_9 '>
+                        <h3>
+                            Emergency Calls
+                        </h3>
+                    </li>
+                    <!-- mobilelistitem_11 -->
+                    <li class=' profilePage_mobilelistitem_11  tgz-cg-has-icon'>
+                        <a id="profilePage_mobilelistitem_11" name="mobilelistitem_11" dsid="mobilelistitem_11"
+                        tabIndex="3" class=' profilePage_mobilelistitem_11 '>
+                        <img class='ui-li-icon' src="files/views/assets/image/information.png" />
+                        <h3>Item 2</h3>
+                        </a>
+                    </li>
+                    <!-- mobilelistitem_13 -->
+                    <li class=' profilePage_mobilelistitem_13  tgz-cg-has-icon'>
+                        <a id="profilePage_mobilelistitem_13" name="mobilelistitem_13" dsid="mobilelistitem_13"
+                        tabIndex="3" class=' profilePage_mobilelistitem_13 '>
+                        <img class='ui-li-icon' src="files/views/assets/image/ambulance.png" />
+                        <h3>Item 3</h3>
+                        </a>
+                    </li>
+                    <!-- mobilelistitem_22 -->
+                    <li class=' profilePage_mobilelistitem_22  tgz-cg-has-icon'>
+                        <a id="profilePage_mobilelistitem_22" name="mobilelistitem_22" dsid="mobilelistitem_22"
+                        tabIndex="3" class=' profilePage_mobilelistitem_22 '>
+                        <img class='ui-li-icon' src="files/views/assets/image/dentist.png" />
+                        <h3>Item 4</h3>
+                        </a>
+                    </li>
+                    <!-- mobilelistitem_24 -->
+                    <li class=' profilePage_mobilelistitem_24  tgz-cg-has-icon'>
+                        <a id="profilePage_mobilelistitem_24" name="mobilelistitem_24" dsid="mobilelistitem_24"
+                        tabIndex="3" class=' profilePage_mobilelistitem_24 '>
+                        <img class='ui-li-icon' src="files/views/assets/image/emergencyphone.png" />
+                        <h3>Item 5</h3>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- mobilefooter -->
+            <div data-role="footer" data-position="fixed" class=" profilePage_mobilefooter"
+            name="mobilefooter" dsid="mobilefooter" id="profilePage_mobilefooter" data-theme="a">
+                <!-- mobilebutton_29 -->
+                <a data-role="button" name="mobilebutton_29" dsid="mobilebutton_29" class=' ui-icon-alt profilePage_mobilebutton_29'
+                style='min-height:20px;margin-left:5px; ' id="profilePage_mobilebutton_29" data-corners="true"
+                data-icon="info" data-iconpos="notext" data-inline='true' data-mini='true' data-theme="a"
+                tabIndex="7">
+                Button
+                </a>
+                <!-- mobilebutton_27 -->
+                <a data-role="button" name="mobilebutton_27" dsid="mobilebutton_27" class=' ui-icon-alt profilePage_mobilebutton_27'
+                style='min-height:20px;margin-left:5px; ' id="profilePage_mobilebutton_27" data-corners="true"
+                data-icon="search" data-iconpos="notext" data-inline='true' data-mini='true' data-theme="a"
+                tabIndex="5">
+                Button
+                </a>
+                <!-- mobilebutton_28 -->
+                <a data-role="button" name="mobilebutton_28" dsid="mobilebutton_28" class=' ui-icon-alt profilePage_mobilebutton_28'
+                style='min-height:20px;margin-left:5px; ' id="profilePage_mobilebutton_28" data-corners="true"
+                data-icon="star" data-iconpos="notext" data-inline='true' data-mini='true' data-theme="a"
+                tabIndex="6">
+                Button
+                </a>
+                <!-- mobilebutton_30 -->
+                <a data-role="button" name="mobilebutton_30" dsid="mobilebutton_30" class=' ui-icon-alt profilePage_mobilebutton_30'
+                style='min-height:20px;margin-left:5px; ' id="profilePage_mobilebutton_30" data-corners="true"
+                data-icon="alert" data-iconpos="notext" data-inline='true' data-mini='true' data-theme="a"
+                tabIndex="8">
+                Button
+                </a>
+            </div>
+        </div>
+        <div data-role="page" style="min-height:480px;" dsid="mapPage" id="mapPage" class="type-interior"
+        data-theme="a" data-add-back-btn="false" data-back-btn-text="Back">
+            <!-- p2header -->
+            <div data-role="header" data-position="fixed" data-theme="a" name="p2header" id="mapPage_p2header"
+            class=' mapPage_p2header '>
+                <h1 dsid="p2header">
+                    Search
+                </h1>
+                <!-- p2headernavbar -->
+                <div data-role="navbar" id="mapPage_p2headernavbar" name="p2headernavbar" dsid="p2headernavbar"
+                class="ui-icon-alt mapPage_p2headernavbar" data-theme="a" style="position: relative;"
+                data-iconpos="left">
+                    <ul>
+                        <!-- mobilenavbaritem_3 -->
+                        <li>
+                            <a data-theme="a" id="mapPage_mobilenavbaritem_3" dsid="mobilenavbaritem_3" name="mobilenavbaritem_3"
+                            data-icon="bars" data-iconpos="left">
+                            List
+                            </a>
+                        </li>
+                        <!-- mobilenavbaritem_5 -->
+                        <li>
+                            <a data-theme="a" data-icon="grid" id="mapPage_mobilenavbaritem_5" dsid="mobilenavbaritem_5"
+                            name="mobilenavbaritem_5" data-iconpos="left">
+                            Details
+                            </a>
+                        </li>
+                        <!-- mobilenavbaritem_17 -->
+                        <li>
+                            <a data-theme="a" data-icon="search" id="mapPage_mobilenavbaritem_17" dsid="mobilenavbaritem_17"
+                            name="mobilenavbaritem_17">
+                            Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- mobilebutton_18 -->
+                <a data-role="button" name="mobilebutton_18" dsid="mobilebutton_18" class='ui-btn-right  ui-icon-alt mapPage_mobilebutton_18'
+                style='min-height:20px; ' id="mapPage_mobilebutton_18" data-corners="true" data-icon="home"
+                data-iconpos="notext" data-inline='true' data-mini='true' data-theme="a" tabIndex="4">
+                Home
+                </a>
+                <!-- mobilebutton_23 -->
+                <a data-role="button" name="mobilebutton_23" dsid="mobilebutton_23" class='ui-btn-left   mapPage_mobilebutton_23'
+                id="mapPage_mobilebutton_23" data-corners="true" data-inline='true' data-mini='true'
+                data-theme="a" tabIndex="8">
+                Menu
+                </a>
+            </div>
+            <!-- p2container -->
+            <div data-role="content" id="mapPage_p2container" name="p2container" class=" mapPage_p2container"
+            dsid="p2container" data-theme="">
+                <!-- p2panel -->
+                <div name="p2panel" dsid="p2panel" id="mapPage_p2panel" class=" mapPage_p2panel">
+                    <div id="p2panel" data-display="overlay" data-role="panel" data-transition="slide">
+                        <ul id="p2listview" data-role="listview">
+                            <li>
+                                <a href="#">Acura</a>
+                            </li>
+                            <li>
+                                <a href="#">Audi</a>
+                            </li>
+                            <li>
+                                <a href="#">BMW</a>
+                            </li>
+                            <li>
+                                <a href="#">Cadillac</a>
+                            </li>
+                            <li>
+                                <a href="#">Ferrari</a>
+                            </li>
+                            <li>
+                                <a href="#">Acura</a>
+                            </li>
+                            <li>
+                                <a href="#">Audi</a>
+                            </li>
+                            <li>
+                                <a href="#">BMW</a>
+                            </li>
+                            <li>
+                                <a href="#">Cadillac</a>
+                            </li>
+                            <li>
+                                <a href="#">Ferrari</a>
+                            </li>
+                            <li>
+                                <a href="#">Acura</a>
+                            </li>
+                            <li>
+                                <a href="#">Audi</a>
+                            </li>
+                            <li>
+                                <a href="#">BMW</a>
+                            </li>
+                            <li>
+                                <a href="#">Cadillac</a>
+                            </li>
+                            <li>
+                                <a href="#">Ferrari</a>
+                            </li>
+                            <li>
+                                <a href="#">Acura</a>
+                            </li>
+                            <li>
+                                <a href="#">Audi</a>
+                            </li>
+                            <li>
+                                <a href="#">BMW</a>
+                            </li>
+                            <li>
+                                <a href="#">Cadillac</a>
+                            </li>
+                            <li>
+                                <a href="#">Ferrari</a>
+                            </li>
+                            <li>
+                                <a href="#">Acura</a>
+                            </li>
+                            <li>
+                                <a href="#">Audi</a>
+                            </li>
+                            <li>
+                                <a href="#">BMW</a>
+                            </li>
+                            <li>
+                                <a href="#">Cadillac</a>
+                            </li>
+                            <li>
+                                <a href="#">Ferrari</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- mobilesearchbar_21 -->
+                <div data-role="fieldcontain" class="mapPage_mobilesearchbar_21 ">
+                    <div id="mapPage_mobilesearchbar_21-cover-div">
+                        <img id="mapPage_mobilesearchbar_21-cover-img" src="files/resources/image/icon-search-cover.png"
+                        />
+                    </div>
+                    <input type="search" name="mobilesearchbar_21" id="mapPage_mobilesearchbar_21" dsid="mobilesearchbar_21"
+                    value="" placeholder="Search..." data-theme="a" tabIndex="7" class='ui-icon-alt mapPage_mobilesearchbar_21 '
+                    data-mini="true" />
+                </div>
+                <!-- map -->
+                <div id="mapPage_map" dsid="map" name="map" tiggzitype="object" apperytype="object"
+                class=' mapPage_map' style='width:100%;'>
+                    <img class=' mapPage_map' src="http://assets1.geocommons.com/d51ab1366bec6a2c4954db979e5921bd4cc140db/images/no_preview_map.png?1311276822"
+                    />
+                </div>
+                <ul data-role="listview" id="mapPage_map_markers" name="map_markers" dsid="map_markers"
+                style="display:none">
+                    <!-- marker1 -->
+                    <li id="mapPage_marker1" name="marker1" dsid="marker1" tiggzitype="marker" apperytype="marker"
+                    rendered="false" latitude="" longitude="" text="Here's my position" address="" show_info="false"
+                    style="display:none">
+                        <div id="mapPage_marker1_infoWindow" name="marker1_infoWindowContent" class='mapPage_marker1'>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- p2footer -->
+            <div data-role="footer" data-position="fixed" class=" mapPage_p2footer" name="p2footer"
+            dsid="p2footer" id="mapPage_p2footer" data-theme="a">
+                <!-- p2footernavbar -->
+                <div data-role="navbar" id="mapPage_p2footernavbar" name="p2footernavbar" dsid="p2footernavbar"
+                class="ui-icon-nodisc mapPage_p2footernavbar" data-theme="a" style="position: relative;"
+                data-iconpos="top">
+                    <ul>
+                        <!-- mobilenavbaritem_7 -->
+                        <li>
+                            <a data-theme="a" class="ui-btn-active ui-state-persist" id="mapPage_mobilenavbaritem_7"
+                            dsid="mobilenavbaritem_7" name="mobilenavbaritem_7" data-icon="driving" data-iconpos="top">
+                            Driving
+                            </a>
+                        </li>
+                        <!-- mobilenavbaritem_8 -->
+                        <li>
+                            <a data-theme="a" id="mapPage_mobilenavbaritem_8" dsid="mobilenavbaritem_8" name="mobilenavbaritem_8"
+                            data-icon="cycling" data-iconpos="top">
+                            Cycling
+                            </a>
+                        </li>
+                        <!-- mobilenavbaritem_9 -->
+                        <li>
+                            <a data-theme="a" id="mapPage_mobilenavbaritem_9" dsid="mobilenavbaritem_9" name="mobilenavbaritem_9"
+                            data-icon="walking" data-iconpos="top">
+                            Walking
+                            </a>
+                        </li>
+                        <!-- mobilenavbaritem_22 -->
+                        <li>
+                            <a data-theme="a" id="mapPage_mobilenavbaritem_22" dsid="mobilenavbaritem_22" name="mobilenavbaritem_22"
+                            data-iconpos="top" data-icon="bus">
+                            Transit
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
