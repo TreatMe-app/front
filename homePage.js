@@ -312,9 +312,9 @@ mapPage_js = function(runBeforeShow) { /* Object & array with components "name-t
             bikeLayer.setMap(null);
             transitLayer.setMap(null);
             trafficLayer.setMap(Appery('map').gmap);
-
-            map.refresh();
-
+            //Appery('map').gmap.refresh();
+            //map.refresh();
+            
             $t.refreshScreenFormElements("mapPage");
         },
         'onSuccess': function(data) {
