@@ -24,14 +24,14 @@ function setDetailContent(pageUrl) {
 }
 
 Appery.AppPages = [{
+    "name": "mapPage",
+    "location": "#mapPage"
+}, {
     "name": "homePage",
     "location": "#homePage"
 }, {
     "name": "profilePage",
     "location": "#profilePage"
-}, {
-    "name": "mapPage",
-    "location": "#mapPage"
 }];
 
 homePage_js = function(runBeforeShow) { /* Object & array with components "name-to-id" mapping */
@@ -231,16 +231,6 @@ homePage_js = function(runBeforeShow) { /* Object & array with components "name-
                 //Appery('p1search').val(localStorage.getItem('isEmergency'));
             },
         });
-        $('#homePage_p1container [name="p1search"]').die().live({
-            input: function() {
-                try {
-                    PlacesAutocompleteGetPredictions.execute({})
-                } catch (ex) {
-                    console.log(ex.name + '  ' + ex.message);
-                    hideSpinner();
-                };
-            },
-        });
 
         $('#homePage_p1footer [name="p1navbarbutton1"]').die().live({
             click: function() {
@@ -277,6 +267,358 @@ homePage_js = function(runBeforeShow) { /* Object & array with components "name-
 $("#homePage").die("pageinit").live("pageinit", function(event, ui) {
     Appery.processSelectMenu($(this));
     homePage_js();
+});
+
+mapPage_js = function(runBeforeShow) { /* Object & array with components "name-to-id" mapping */
+    var n2id_buf = {
+        'p2headernavbar': 'mapPage_p2headernavbar',
+        'mobilenavbaritem_3': 'mapPage_mobilenavbaritem_3',
+        'mobilenavbaritem_5': 'mapPage_mobilenavbaritem_5',
+        'mobilenavbaritem_17': 'mapPage_mobilenavbaritem_17',
+        'mobilebutton_18': 'mapPage_mobilebutton_18',
+        'mobilebutton_23': 'mapPage_mobilebutton_23',
+        'p2panel': 'mapPage_p2panel',
+        'map': 'mapPage_map',
+        'marker1': 'mapPage_marker1',
+        'p2footernavbar': 'mapPage_p2footernavbar',
+        'mobilenavbaritem_7': 'mapPage_mobilenavbaritem_7',
+        'mobilenavbaritem_8': 'mapPage_mobilenavbaritem_8',
+        'mobilenavbaritem_9': 'mapPage_mobilenavbaritem_9',
+        'mobilenavbaritem_22': 'mapPage_mobilenavbaritem_22'
+    };
+
+    if ("n2id" in window && window.n2id !== undefined) {
+        $.extend(n2id, n2id_buf);
+    } else {
+        window.n2id = n2id_buf;
+    }
+
+    if (navigator.userAgent.indexOf("IEMobile") != -1) {
+        //Fixing issue https://github.com/jquery/jquery-mobile/issues/5424 on Windows Phone
+        $("div[data-role=footer]").css("bottom", "-36px");
+    }
+
+    Appery.CurrentScreen = 'mapPage';
+
+    /*
+     * Nonvisual components
+     */
+    var datasources = [];
+
+    MyPosition = new Appery.DataSource(GeolocationService, {
+        'onComplete': function(jqXHR, textStatus) {
+            displayDirection(localStorage.getItem('origin'), localStorage.getItem('destination'), Appery('map').gmap, google.maps.TravelMode.DRIVING);
+
+            bikeLayer.setMap(null);
+            transitLayer.setMap(null);
+            trafficLayer.setMap(Appery('map').gmap);
+
+            map.refresh();
+
+            $t.refreshScreenFormElements("mapPage");
+        },
+        'onSuccess': function(data) {
+            var map = Appery('map');
+            //map.options['address']='';
+            var origin = new google.maps.LatLng(data.coords.latitude, data.coords.longitude);
+            var destination = new google.maps.LatLng(positionArray[1].lat, positionArray[1].lng);
+
+            localStorage.setItem('origin', origin);
+            localStorage.setItem('destination', destination);
+
+            marker.setMap(null);
+            //professional.setMap(null);
+            marker.setOptions({
+                position: origin,
+                title: "TreatME !",
+                icon: "files/views/assets/image/marker-emergencyphone.png"
+            });
+
+/*
+professional.setOptions({position : destination,
+                   title : positionArray[1].title, 
+                   icon : "files/views/assets/image/marker-medicine.png"
+                  });
+*/
+
+            marker.setMap(map.gmap);
+            //professional.setMap(map.gmap);
+            google.maps.event.addListener(marker, 'click', function(e) {
+                map.gmap.setZoom(15);
+                map.gmap.setCenter(e.latLng);
+                //distance = google.maps.geometry.spherical.computeDistanceBetween(myLatlng, e.latLng);
+                getReverseGeocoding(origin, map.gmap, this, "");
+            });
+
+/*
+google.maps.event.addListener(professional, 'click', function(e) {
+    map.gmap.setZoom(15);
+    map.gmap.setCenter(e.latLng);	
+    //distance = google.maps.geometry.spherical.computeDistanceBetween(myLatlng, e.latLng);
+    getReverseGeocoding(destination, map.gmap, this, "");
+});
+*/
+
+            createMarker(positionArray, markerArray, "files/views/assets/image/marker-medicine.png");
+            showMarker(markerArray, map);;
+        },
+        'onError': function(jqXHR, textStatus, errorThrown) {
+            var map = Appery('map');
+            map.options['address'] = 'Paris';
+
+            localStorage.setItem('origin', 'Paris');
+
+            map.refresh();
+        },
+        'responseMapping': [{
+            'PATH': ['coords', 'latitude'],
+            'ID': 'map',
+            'ATTR': 'latitude'
+        }, {
+            'PATH': ['coords', 'longitude'],
+            'ID': 'map',
+            'ATTR': 'longitude'
+        }],
+        'requestMapping': [{
+            'PATH': ['options', 'maximumAge'],
+            'ATTR': '3000'
+        }, {
+            'PATH': ['options', 'timeout'],
+            'ATTR': '5000'
+        }, {
+            'PATH': ['options', 'enableHighAccuracy'],
+            'ATTR': 'true'
+        }, {
+            'PATH': ['options', 'watchPosition'],
+            'ATTR': 'true'
+        }, {
+            'PATH': ['options', 'frequency'],
+            'ATTR': '1000'
+        }]
+    });
+
+    datasources.push(MyPosition);
+
+    /*
+     * Events and handlers
+     */
+
+    // Before Show
+    mapPage_beforeshow = function() {
+        Appery.CurrentScreen = "mapPage";
+        for (var idx = 0; idx < datasources.length; idx++) {
+            datasources[idx].__setupDisplay();
+        }
+    }
+
+    // On Load
+    screen_BCAD_onLoad = mapPage_onLoad = function() {
+        screen_BCAD_elementsExtraJS();
+        try {
+            MyPosition.execute({})
+        } catch (ex) {
+            console.log(ex.name + '  ' + ex.message);
+            hideSpinner();
+        };
+        Appery('mobilesearchbar_21').hide();
+
+        // TODO fire device events only if necessary (with JS logic)
+        mapPage_deviceEvents();
+        mapPage_windowEvents();
+        screen_BCAD_elementsEvents();
+    }
+
+    // screen window events
+    screen_BCAD_windowEvents = mapPage_windowEvents = function() {
+        $('#mapPage').bind('pageshow orientationchange', function() {
+            adjustContentHeightWithPadding();
+        });
+        $('#mapPage').bind({
+            pageshow: function() {
+                Appery('mobilenavbaritem_3').toggle(function() {
+                    $('#p2panel').panel('open');
+                    $('#p2panel').trigger('updatelayout');
+                }, function() {
+                    $('#p2panel').panel('close');
+                    $('#p2panel').trigger('updatelayout');
+                });
+
+                Appery('mobilenavbaritem_17').toggle(function() {
+                    Appery('mobilesearchbar_21').show();
+                }, function() {
+                    Appery('mobilesearchbar_21').hide();
+                });
+
+                var map = Appery('map');
+                map.gmap.setOptions({
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    panControl: false,
+                    zoomControl: true,
+                    mapTypeControl: false,
+                    scaleControl: false,
+                    streetViewControl: false,
+                    overviewMapControl: false
+                });
+                map.refresh();
+
+                $('#p2listview li a').bind('click', function() {
+                    Appery('mobilesearchbar_21').val($(this).html());
+                });
+
+                ;
+            },
+        });
+
+    }
+
+    // device events
+    mapPage_deviceEvents = function() {
+
+        document.addEventListener("deviceready", function() {
+
+        });
+    }
+
+    // screen elements extra js
+    screen_BCAD_elementsExtraJS = mapPage_elementsExtraJS = function() {
+        // screen (mapPage) extra code
+
+        /* map */
+
+        $("[name = 'map']").wrap("<div/>");
+        $("[name = 'map']").parent().css("margin-left", $("[name = 'map']").css("margin-left"));
+        $("[name = 'map']").parent().css("margin-right", $("[name = 'map']").css("margin-right"));
+        $("[name = 'map']").css("margin-left", '0');
+        $("[name = 'map']").css("margin-right", '0');
+
+        var map_options = {
+            markerSourceName: "map_markers",
+            latitude: "",
+            longitude: "",
+            address: "",
+            zoom: 13,
+            showLocationMarker: false
+        }
+
+        Appery.__registerComponent('map', new Appery.TiggziMapComponent("map", map_options));
+        $("[name='map_markers'] [apperytype='marker']").attr("reRender", "map");
+        $("[name='map']").closest("[data-role='page']").bind({
+            pageshow: function() {
+                if (Appery('map') != undefined) {
+                    Appery('map').refresh();
+                }
+            }
+        });
+
+    }
+
+    // screen elements handler
+    screen_BCAD_elementsEvents = mapPage_elementsEvents = function() {
+
+        $("a :input,a a,a fieldset label").live({
+            click: function(event) {
+                event.stopPropagation();
+            }
+        });
+
+        $('#mapPage_p2header [name="mobilenavbaritem_5"]').die().live({
+            click: function() {
+                if (!$(this).attr('disabled')) {
+                    Appery.navigateTo('profilePage', {
+                        transition: 'slide',
+                        reverse: false
+                    });
+
+                }
+            },
+        });
+
+        $('#mapPage_p2header [name="mobilebutton_18"]').die().live({
+            click: function() {
+                if (!$(this).attr('disabled')) {
+                    Appery.navigateTo('homePage', {
+                        transition: 'slide',
+                        reverse: true
+                    });
+
+                }
+            },
+        });
+
+        $('#mapPage_p2footer [name="mobilenavbaritem_7"]').die().live({
+            click: function() {
+                if (!$(this).attr('disabled')) {
+                    displayDirection(localStorage.getItem('origin'), localStorage.getItem('destination'), Appery('map').gmap, google.maps.TravelMode.DRIVING);
+
+                    bikeLayer.setMap(null);
+                    transitLayer.setMap(null);
+                    trafficLayer.setMap(Appery('map').gmap);
+
+                    Appery('map').refresh();
+
+                }
+            },
+        });
+        $('#mapPage_p2footer [name="mobilenavbaritem_8"]').die().live({
+            click: function() {
+                if (!$(this).attr('disabled')) {
+                    displayDirection(localStorage.getItem('origin'), localStorage.getItem('destination'), Appery('map').gmap, google.maps.TravelMode.BICYCLING);
+
+                    trafficLayer.setMap(null);
+                    transitLayer.setMap(null);
+                    bikeLayer.setMap(Appery('map').gmap);
+
+                    Appery('map').refresh();
+
+                }
+            },
+        });
+        $('#mapPage_p2footer [name="mobilenavbaritem_9"]').die().live({
+            click: function() {
+                if (!$(this).attr('disabled')) {
+                    displayDirection(localStorage.getItem('origin'), localStorage.getItem('destination'), Appery('map').gmap, google.maps.TravelMode.WALKING);
+
+                    trafficLayer.setMap(null);
+                    bikeLayer.setMap(null);
+                    transitLayer.setMap(null);
+
+                    Appery('map').refresh();
+
+                }
+            },
+        });
+        $('#mapPage_p2footer [name="mobilenavbaritem_22"]').die().live({
+            click: function() {
+                if (!$(this).attr('disabled')) {
+                    displayDirection(localStorage.getItem('origin'), localStorage.getItem('destination'), Appery('map').gmap, google.maps.TravelMode.TRANSIT);
+
+                    trafficLayer.setMap(null);
+                    bikeLayer.setMap(null);
+                    transitLayer.setMap(Appery('map').gmap);
+
+                    Appery('map').refresh();;
+
+                }
+            },
+        });
+
+    }
+
+    $("#mapPage").die("pagebeforeshow").live("pagebeforeshow", function(event, ui) {
+        mapPage_beforeshow();
+    });
+
+    if (runBeforeShow) {
+        mapPage_beforeshow();
+    } else {
+        mapPage_onLoad();
+    }
+
+}
+
+$("#mapPage").die("pageinit").live("pageinit", function(event, ui) {
+    Appery.processSelectMenu($(this));
+    mapPage_js();
 });
 
 profilePage_js = function(runBeforeShow) { /* Object & array with components "name-to-id" mapping */
@@ -424,282 +766,4 @@ profilePage_js = function(runBeforeShow) { /* Object & array with components "na
 $("#profilePage").die("pageinit").live("pageinit", function(event, ui) {
     Appery.processSelectMenu($(this));
     profilePage_js();
-});
-
-mapPage_js = function(runBeforeShow) { /* Object & array with components "name-to-id" mapping */
-    var n2id_buf = {
-        'p2headernavbar': 'mapPage_p2headernavbar',
-        'mobilenavbaritem_3': 'mapPage_mobilenavbaritem_3',
-        'mobilenavbaritem_5': 'mapPage_mobilenavbaritem_5',
-        'mobilenavbaritem_17': 'mapPage_mobilenavbaritem_17',
-        'mobilebutton_18': 'mapPage_mobilebutton_18',
-        'mobilebutton_23': 'mapPage_mobilebutton_23',
-        'p2panel': 'mapPage_p2panel',
-        'mobilesearchbar_21': 'mapPage_mobilesearchbar_21',
-        'map': 'mapPage_map',
-        'marker1': 'mapPage_marker1',
-        'p2footernavbar': 'mapPage_p2footernavbar',
-        'mobilenavbaritem_7': 'mapPage_mobilenavbaritem_7',
-        'mobilenavbaritem_8': 'mapPage_mobilenavbaritem_8',
-        'mobilenavbaritem_9': 'mapPage_mobilenavbaritem_9',
-        'mobilenavbaritem_22': 'mapPage_mobilenavbaritem_22'
-    };
-
-    if ("n2id" in window && window.n2id !== undefined) {
-        $.extend(n2id, n2id_buf);
-    } else {
-        window.n2id = n2id_buf;
-    }
-
-    if (navigator.userAgent.indexOf("IEMobile") != -1) {
-        //Fixing issue https://github.com/jquery/jquery-mobile/issues/5424 on Windows Phone
-        $("div[data-role=footer]").css("bottom", "-36px");
-    }
-
-    Appery.CurrentScreen = 'mapPage';
-
-    /*
-     * Nonvisual components
-     */
-    var datasources = [];
-
-    MyPosition = new Appery.DataSource(GeolocationService, {
-        'onComplete': function(jqXHR, textStatus) {
-
-            $t.refreshScreenFormElements("mapPage");
-        },
-        'onSuccess': function(data) {
-            var map = Appery('map');
-            //map.options['address']='';
-            var pos = new google.maps.LatLng(data.coords.latitude, data.coords.longitude);
-
-            marker.setMap(null);
-            marker.setOptions({
-                position: pos,
-                title: "TreatME !",
-                icon: "files/views/assets/image/marker-emergencyphone.png"
-            });
-            //marker.setTitle("Here's my position");
-            //marker.setIcon("files/views/assets/image/bus.png");
-            //marker.setPosition(pos);
-/*
-var marker = new google.maps.Marker({
-    position: pos,
-    title : "Here's my position",
-    icon : "files/views/assets/image/ambulance.png"
-});	
-*/
-
-            marker.setMap(map.gmap);
-
-            google.maps.event.addListener(marker, 'click', function(e) {
-                map.gmap.setZoom(15);
-                map.gmap.setCenter(e.latLng);
-                //distance = google.maps.geometry.spherical.computeDistanceBetween(myLatlng, e.latLng);
-                mycontent = '<b><span style="color:#dc0f16"> Help ME !</span></b> My address is : ';
-                getReverseGeocoding(pos, map.gmap, this, mycontent);
-            });
-
-            map.refresh();
-
-            //alert('latitude : '+data.coords.latitude+' - longitude : '+ data.coords.longitude);
-            ;
-        },
-        'onError': function(jqXHR, textStatus, errorThrown) {
-            var map = Appery('map');
-            map.options['address'] = 'Paris';
-            map.refresh();
-        },
-        'responseMapping': [{
-            'PATH': ['coords', 'latitude'],
-            'ID': 'map',
-            'ATTR': 'latitude'
-        }, {
-            'PATH': ['coords', 'longitude'],
-            'ID': 'map',
-            'ATTR': 'longitude'
-        }],
-        'requestMapping': [{
-            'PATH': ['options', 'maximumAge'],
-            'ATTR': '3000'
-        }, {
-            'PATH': ['options', 'timeout'],
-            'ATTR': '5000'
-        }, {
-            'PATH': ['options', 'enableHighAccuracy'],
-            'ATTR': 'true'
-        }, {
-            'PATH': ['options', 'watchPosition'],
-            'ATTR': 'true'
-        }, {
-            'PATH': ['options', 'frequency'],
-            'ATTR': '1000'
-        }]
-    });
-
-    datasources.push(MyPosition);
-
-    /*
-     * Events and handlers
-     */
-
-    // Before Show
-    mapPage_beforeshow = function() {
-        Appery.CurrentScreen = "mapPage";
-        for (var idx = 0; idx < datasources.length; idx++) {
-            datasources[idx].__setupDisplay();
-        }
-    }
-
-    // On Load
-    screen_BCAD_onLoad = mapPage_onLoad = function() {
-        screen_BCAD_elementsExtraJS();
-        try {
-            MyPosition.execute({})
-        } catch (ex) {
-            console.log(ex.name + '  ' + ex.message);
-            hideSpinner();
-        };
-        Appery('mobilesearchbar_21').hide();
-
-        // TODO fire device events only if necessary (with JS logic)
-        mapPage_deviceEvents();
-        mapPage_windowEvents();
-        screen_BCAD_elementsEvents();
-    }
-
-    // screen window events
-    screen_BCAD_windowEvents = mapPage_windowEvents = function() {
-        $('#mapPage').bind('pageshow orientationchange', function() {
-            adjustContentHeightWithPadding();
-        });
-        $('#mapPage').bind({
-            pageshow: function() { //Appery('mobilesearchbar_21').hide();
-                Appery('mobilenavbaritem_3').toggle(function() {
-                    $('#p2panel').panel('open');
-                    $('#p2panel').trigger('updatelayout');
-                }, function() {
-                    $('#p2panel').panel('close');
-                    $('#p2panel').trigger('updatelayout');
-                });
-
-                Appery('mobilenavbaritem_17').toggle(function() {
-                    Appery('mobilesearchbar_21').show();
-                }, function() {
-                    Appery('mobilesearchbar_21').hide();
-                });
-
-                var map = Appery('map');
-                map.gmap.setOptions({
-                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                    panControl: false,
-                    zoomControl: true,
-                    mapTypeControl: false,
-                    scaleControl: false,
-                    streetViewControl: false,
-                    overviewMapControl: false
-                });
-                map.refresh();
-
-                $('#p2listview li a').bind('click', function() {
-                    Appery('mobilesearchbar_21').val($(this).html());
-                });
-
-                ;
-            },
-        });
-
-    }
-
-    // device events
-    mapPage_deviceEvents = function() {
-
-        document.addEventListener("deviceready", function() {
-
-        });
-    }
-
-    // screen elements extra js
-    screen_BCAD_elementsExtraJS = mapPage_elementsExtraJS = function() {
-        // screen (mapPage) extra code
-
-        /* map */
-
-        $("[name = 'map']").wrap("<div/>");
-        $("[name = 'map']").parent().css("margin-left", $("[name = 'map']").css("margin-left"));
-        $("[name = 'map']").parent().css("margin-right", $("[name = 'map']").css("margin-right"));
-        $("[name = 'map']").css("margin-left", '0');
-        $("[name = 'map']").css("margin-right", '0');
-
-        var map_options = {
-            markerSourceName: "map_markers",
-            latitude: "",
-            longitude: "",
-            address: "",
-            zoom: 13,
-            showLocationMarker: false
-        }
-
-        Appery.__registerComponent('map', new Appery.TiggziMapComponent("map", map_options));
-        $("[name='map_markers'] [apperytype='marker']").attr("reRender", "map");
-        $("[name='map']").closest("[data-role='page']").bind({
-            pageshow: function() {
-                if (Appery('map') != undefined) {
-                    Appery('map').refresh();
-                }
-            }
-        });
-
-    }
-
-    // screen elements handler
-    screen_BCAD_elementsEvents = mapPage_elementsEvents = function() {
-
-        $("a :input,a a,a fieldset label").live({
-            click: function(event) {
-                event.stopPropagation();
-            }
-        });
-
-        $('#mapPage_p2header [name="mobilenavbaritem_5"]').die().live({
-            click: function() {
-                if (!$(this).attr('disabled')) {
-                    Appery.navigateTo('profilePage', {
-                        transition: 'slide',
-                        reverse: false
-                    });
-
-                }
-            },
-        });
-
-        $('#mapPage_p2header [name="mobilebutton_18"]').die().live({
-            click: function() {
-                if (!$(this).attr('disabled')) {
-                    Appery.navigateTo('homePage', {
-                        transition: 'slide',
-                        reverse: true
-                    });
-
-                }
-            },
-        });
-
-    }
-
-    $("#mapPage").die("pagebeforeshow").live("pagebeforeshow", function(event, ui) {
-        mapPage_beforeshow();
-    });
-
-    if (runBeforeShow) {
-        mapPage_beforeshow();
-    } else {
-        mapPage_onLoad();
-    }
-
-}
-
-$("#mapPage").die("pageinit").live("pageinit", function(event, ui) {
-    Appery.processSelectMenu($(this));
-    mapPage_js();
 });
