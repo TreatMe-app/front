@@ -3,6 +3,10 @@
  *
  */
 
+
+//require(["files/resources/js/test"], function(test) {
+//	console.log("testjs : " + testVariable.title);
+//});
 var positionArray = [
 {"lng" : 2.34202119999998, "lat" : 48.8632985, "title" : "Centre de santé Louvre" , "adresse":"15, rue du Louvre 75001 Paris"},
 {"lng" : 2.34280660000002, "lat" : 48.8510191, "title" : "Centre Médical Saint Michel", "adresse":"22, boulevard Saint Michel 75006 Paris"},
@@ -16,6 +20,8 @@ var positionArray = [
 {"lat" :  48.8720189, "lng" : 2.33987879999995   ,"title":"Centre de santé Haussmann", "adresse":""},	
 {"lat" :48.8719264, "lng" :	2.32820760000004,"title":"Centre médical et dentaire Opéra", "adresse":""}	
 ];
+
+//var positionArray = [];
 
 var marker = new google.maps.Marker();
 var professional = new google.maps.Marker();
@@ -32,6 +38,22 @@ var trafficLayer = new google.maps.TrafficLayer();
 var bikeLayer = new google.maps.BicyclingLayer();
 var transitLayer = new google.maps.TransitLayer();
 
+function preTreatme(keyword) {
+	console.log("keyword " + keyword);
+	var tab = [];
+	console.log("tab 1" + tab);
+	tab = treatme(48.8647905,2.3339705999999296,""+keyword);
+	console.log("tab 2" + tab);
+	for (var i=0; i < tab.length; i++ ){
+		console.log("positionArray" + positionArray[i]);
+		positionArray[i].lat = tab[i].lat;
+		positionArray[i].lng = tab[i].lng;
+		positionArray[i].title = tab[i].name;
+		positionArray[i].adresse = tab[i].address;
+	}
+	
+	
+}
 
 /**
  * Method that can be used for basic google.maps.Map creation for given container
@@ -86,7 +108,7 @@ function getReverseGeocoding(latlng, map, marker, text)
 
 function displayDirection(origin, destination, map, travelMode)
 {
-	//console.log("displayDirection : destination :" + destination);
+    
     var request = {
         origin: origin,
         destination: destination,
@@ -123,8 +145,8 @@ function createMarker(arrayData, arrayStore, icon)
             //animation : google.maps.Animation.DROP
         });
         arrayStore.push(mk);	
-    }
-} 
+    }    
+}; 
 
  // Fonction qui ajoute les différents markers (overlays) sur la carte 
  // & y attache un évènement de type 'onclick'
@@ -141,7 +163,7 @@ function showMarker(arrayPush, map)
             getReverseGeocoding(e.latLng, map.gmap, this, ""); 
         });	
     }
-}
+ };
   
 
 function toggleBounce(marker) 
@@ -154,8 +176,7 @@ function toggleBounce(marker)
     {     
       marker.setAnimation(google.maps.Animation.BOUNCE);   
     } 
-} 
-
+}; 
 
 Appery.getProjectGUID = function() {
     return '28f345f4-a55d-4adb-b356-697afb04e327';
@@ -458,6 +479,7 @@ mapPage_js = function(runBeforeShow) { /* Object & array with components "name-t
      * Nonvisual components
      */
     var datasources = [];
+    //var destination = new google.maps.LatLng(positionArray[1].lat, positionArray[1].lng);
     var destination = new google.maps.LatLng(positionArray[1].lat, positionArray[1].lng);
     localStorage.setItem("destination",destination);
     MyPosition = new Appery.DataSource(GeolocationService, {
@@ -465,13 +487,13 @@ mapPage_js = function(runBeforeShow) { /* Object & array with components "name-t
         	//console.log("onComplete : destination :" + destination);
         	//var map = new google.maps.Map(document.getElementById('mapPage_map'), mapOptions);
         	var map = createMapForGivenContainer(document.getElementById('mapPage_map'),destination);
-        	//displayDirection(localStorage.getItem('origin'), localStorage.getItem('destination'), Appery('map').gmap, google.maps.TravelMode.DRIVING);
-        	displayDirection(localStorage.getItem('origin'), localStorage.getItem('destination'), map.gmap, google.maps.TravelMode.DRIVING);
+        	displayDirection(localStorage.getItem('origin'), localStorage.getItem('destination'), Appery('map').gmap, google.maps.TravelMode.DRIVING);
+        	//displayDirection(localStorage.getItem('origin'), localStorage.getItem('destination'), map.gmap, google.maps.TravelMode.DRIVING);
         	bikeLayer.setMap(null);
             transitLayer.setMap(null);
-            //trafficLayer.setMap(Appery('map').gmap);
+            trafficLayer.setMap(Appery('map').gmap);
 
-            trafficLayer.setMap(map.gmap);
+            //trafficLayer.setMap(map.gmap);
             map.refresh();
             
             $t.refreshScreenFormElements("mapPage");
@@ -925,3 +947,4 @@ $("#profilePage").die("pageinit").live("pageinit", function(event, ui) {
     Appery.processSelectMenu($(this));
     profilePage_js();
 });
+

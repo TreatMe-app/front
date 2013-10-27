@@ -1,49 +1,163 @@
-!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
-    <title>Rest call</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script language="javascript">
-    var xmlhttp;
-    function init() {
-       // put more code here in case you are concerned about browsers that do not provide XMLHttpRequest object directly
-       xmlhttp = new XMLHttpRequest();
-    }
-    function getdetails() {
-        var empno = document.getElementById("empno");
-        var url = "https://api.doctoralia.com/v1/fr/searchNearBy?lat=48.853581&lng=2.348915&specialityId=1071&apiKey=89dbbd84";
-        xmlhttp.open('GET',url,true);
-        xmlhttp.send(null);
-        xmlhttp.onreadystatechange = function() {
-
-               var empname =  document.getElementById("empname");
-               var age =  document.getElementById("age");
-               if (xmlhttp.readyState == 4) {
-                  if ( xmlhttp.status == 200) {
-                       var det = eval( "(" +  xmlhttp.responseText + ")");
-                       if (det.age > 0 ) {
-                          empname.value = det.name;
-                          age.value = det.age;
-                       }
-                       else {
-                           empname.value = "";
-                           age.value ="";
-                           alert("Invalid Employee ID");
-                       }
-                 }
-                 else
-                       alert("Error ->" + xmlhttp.responseText);
-              }
-        };
-    }
-  </script>
-  </head>
-  <body  onload="init()">
-   <h1>Call Rest Service </h1>
-   <p>
-      
-      <input type="text" id="empno" size="10"/>  <input type="button" value="Get Details" onclick="getdetails()"/>
-   </p>
-  
-  </body>
+<head>
+<title>Rest call</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="jquery-1.7.2.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+<script language="javascript">
+var doctorsGoogle = [];
+function callback(results, status) {
+if (status == google.maps.places.PlacesServiceStatus.OK) {
+for (var i = 0; i < results.length; i++) {
+var place = results[i];
+// console.log("name = " + place.name + " location = " + place.geometry.location + " reference = " + place.reference);
+doctorsGoogle.push({
+"name" : place.name ,
+"location" : place.geometry.location ,
+"reference" : place.reference,
+"address" : "N/A"
+});
+//console.log(medicalResG.places[0].name + " " + medicalResG.places[0].location);
+}
+}
+}
+ 
+function getdetailsGoogle(lat, lng, searchedkey) {
+ //var lat=48.853581;
+ //var lng = 2.348915;
+ //var key = "dentist";
+ var position = new google.maps.LatLng(lat, lng);
+ 
+map = new google.maps.Map(document.getElementById('map'), {
+mapTypeId: google.maps.MapTypeId.ROADMAP,
+center: position,
+zoom: 15
+});
+ 
+var request = {
+location: position,
+radius: '5000',
+rankby : 'distance',
+keyword : searchedkey
+ 
+};
+ 
+service = new google.maps.places.PlacesService(map);
+service.nearbySearch(request, callback);
+}
+ 
+ 
+function getdetailsDoctoralia(lat, lng, searchedkey) {
+ 
+// Get my current reverse geocoding
+ 
+// Retrive my current city
+var typesearch = "near";
+ 
+var my_country = "https://api.doctoralia.com/v1/countries?apiKey=89dbbd84";
+var specialtiesByCountry = "https://api.doctoralia.com/v1/"+ my_country +"/specialities?apiKey=89dbbd84";
+var provinces = "https://api.doctoralia.com/v1/"+ my_country +"/provinces?apiKey=89dbbd84";
+var citiesByProvince = "https://api.doctoralia.com/v1/"+ my_country +"/provinces/"+ provinces +"/cities?apiKey=89dbbd84";
+var insurances = "https://api.doctoralia.com/v1/"+ my_country +"/insurances?apiKey=89dbbd84"; // Conventionné 1, 2, ou 0
+ 
+ 
+var keyword = document.getElementById("searchedkey");
+var nearbysearch = "https://api.doctoralia.com/v1/fr/searchNearBy?lat="+lat+"&lng="+lng+"&specialityId=1071&apiKey=89dbbd84";
+var keywordsearch = "https://api.doctoralia.com/v1/fr/search/"+ searchedkey +"?apiKey=89dbbd84";
+//var url = "https://api.doctoralia.com/v1/fr/search/pediatre?apiKey=89dbbd84"
+ 
+var medicalResD = {
+places: []
+};
+ 
+if (typesearch == "near")
+{
+// Function nearbysearch
+$.getJSON(nearbysearch, function(json) {
+if (json.size == 0) {
+console.log("json error");
+return;
+}
+var data = json.result.medicalCenters; //Tableau de Données
+var tab_spe;
+for (var i=0; i < data.length; i++ ){
+for (var j=0; j < data[i].specialities.length; j++ )
+{
+tab_spe = data[i].specialities[j].name;
+}
+ 
+doctorsGoogle.push({
+"name" : data[i].name ,
+//"postalCode": data.postalCode,
+//"city" : data.city,
+//"region" : data.region,
+//"lat" : data.lat,
+//"lng" : data.lng,
+"location" : new google.maps.LatLng(data[i].lat, data[i].lng, true),
+"reference" : "N/A",
+"address" : data[i].address ,
+"withAppointments" : data[i].withAppointments,
+"specialities" : tab_spe
+});
+}
+});
+}
+ 
+if (typesearch == "text")
+{
+// Function textsearch
+$.getJSON(keywordsearch, function(json) {
+if (json.size == 0) {
+console.log("json error");
+return;
+}
+var data = json.result.entities; //Tableau de Données
+for (var i=0; i < data.length; i++ ){
+//console.log(data[i].name);
+ 
+medicalResD.places.push({
+"name" : place.name ,
+"location" : place.geometry.location ,
+"reference" : place.reference
+});
+ 
+// console.log(medicalRes.places[0].name);
+}
+});
+}
+//return medicalResD.places;
+}
+function treatme(lat, lng , searchedkey)
+{
+ 
+ getdetailsDoctoralia(0, 0, searchedkey);
+ getdetailsGoogle(0, 0, searchedkey);
+ 
+ getdetailsDoctoralia(lat, lng, searchedkey);
+ getdetailsGoogle(lat, lng, searchedkey);
+//var doctors.push(doctorsD) ;//doctorsD.concat(doctorsD);
+ 
+// wait before
+//setTimeout(function(){null},30000);
+ 
+if(doctorsGoogle.length != 0)
+{
+console.log(doctorsGoogle);
+}
+//return doctors;
+}
+ 
+ 
+</script>
+</head>
+<body >
+<h1>Call Rest Service </h1>
+<div id="map"></div>
+<p>
+ 
+ 
+<input type="button" value="Call" onclick="treatme(48.8647905,2.3339705999999296,'dentiste')"/>
+ 
+</p>
+</body>
 </html>
